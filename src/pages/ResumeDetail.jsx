@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft, Loader2, FileText, Download } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -36,13 +41,15 @@ export default function ResumeDetail() {
   const [activeVersionId, setActiveVersionId] = useState(null);
   useEffect(() => {
     if (!activeVersionId && versions.length) {
-      setActiveVersionId(resume?.currentVersionId || versions[versions.length - 1]._id);
+      setActiveVersionId(
+        resume?.currentVersionId || versions[versions.length - 1]._id,
+      );
     }
   }, [versions, resume, activeVersionId]);
 
   const activeVersion = useMemo(
     () => versions.find((v) => v._id === activeVersionId),
-    [versions, activeVersionId]
+    [versions, activeVersionId],
   );
 
   const analysisQuery = useAnalysisForVersion(id, activeVersionId);
@@ -95,7 +102,7 @@ export default function ResumeDetail() {
     return (
       <div className="space-y-4">
         <Skeleton className="h-12 w-1/3 rounded-2xl" />
-        <Skeleton className="h-[400px] rounded-3xl" />
+        <Skeleton className="h-100 rounded-3xl" />
       </div>
     );
   }
@@ -146,7 +153,8 @@ export default function ResumeDetail() {
           <div className="space-y-2">
             <CardTitle className="text-base">Run analysis</CardTitle>
             <CardDescription>
-              Score this version with Gemini and get issues, strengths, and rewrites.
+              Score this version with Gemini and get issues, strengths, and
+              rewrites.
             </CardDescription>
             <VersionSwitcher
               versions={versions}
@@ -154,7 +162,7 @@ export default function ResumeDetail() {
               onChange={setActiveVersionId}
             />
           </div>
-          <div className="flex items-center gap-3 flex-1 min-w-[280px] max-w-[520px]">
+          <div className="flex items-center gap-3 flex-1 min-w-70 max-w-130">
             <Input
               placeholder="Target role (optional, e.g. Senior Frontend Engineer)"
               value={targetRole}
@@ -180,7 +188,7 @@ export default function ResumeDetail() {
           </div>
         </div>
         {analyze.error && (
-          <div className="mt-4 text-xs text-[var(--danger)] bg-[#F8E3E0] rounded-xl px-3 py-2">
+          <div className="mt-4 text-xs text-(--danger) bg-[#F8E3E0] rounded-xl px-3 py-2">
             {analyze.error.message}
           </div>
         )}
@@ -272,7 +280,9 @@ export default function ResumeDetail() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle className="text-base">Parsed Sections ({activeVersion.label})</CardTitle>
+              <CardTitle className="text-base">
+                Parsed Sections ({activeVersion.label})
+              </CardTitle>
               <CardDescription className="mt-1">
                 Quick preview of what we extracted from the PDF
               </CardDescription>
@@ -334,9 +344,14 @@ function ParsedSectionsPreview({ version }) {
             <ul className="space-y-1.5">
               {s.experience.slice(0, 5).map((e, i) => (
                 <li key={i}>
-                  <span className="text-[var(--ink)] font-medium">{e.role}</span>
+                  <span className="text-[var(--ink)] font-medium">
+                    {e.role}
+                  </span>
                   {e.company && (
-                    <span className="text-[var(--ink-muted)]"> · {e.company}</span>
+                    <span className="text-[var(--ink-muted)]">
+                      {" "}
+                      · {e.company}
+                    </span>
                   )}
                   {e.period && (
                     <span className="ml-2 text-[11px] text-[var(--ink-muted)]">
@@ -354,9 +369,14 @@ function ParsedSectionsPreview({ version }) {
             <ul className="space-y-1.5">
               {s.education.map((e, i) => (
                 <li key={i}>
-                  <span className="text-[var(--ink)] font-medium">{e.degree}</span>
+                  <span className="text-[var(--ink)] font-medium">
+                    {e.degree}
+                  </span>
                   {e.school && (
-                    <span className="text-[var(--ink-muted)]"> · {e.school}</span>
+                    <span className="text-[var(--ink-muted)]">
+                      {" "}
+                      · {e.school}
+                    </span>
                   )}
                 </li>
               ))}
@@ -370,7 +390,9 @@ function ParsedSectionsPreview({ version }) {
           <PreviewLabel>Skills ({s.skills.length})</PreviewLabel>
           <div className="flex flex-wrap gap-1.5">
             {s.skills.slice(0, 24).map((sk, i) => (
-              <Badge key={i} tone="accent">{sk}</Badge>
+              <Badge key={i} tone="accent">
+                {sk}
+              </Badge>
             ))}
           </div>
         </div>
@@ -413,7 +435,9 @@ function ParsedSectionsPreview({ version }) {
             <PreviewLabel>Languages</PreviewLabel>
             <div className="flex flex-wrap gap-1">
               {s.languages.map((l, i) => (
-                <Badge key={i} tone="neutral">{l}</Badge>
+                <Badge key={i} tone="neutral">
+                  {l}
+                </Badge>
               ))}
             </div>
           </div>
@@ -423,7 +447,9 @@ function ParsedSectionsPreview({ version }) {
             <PreviewLabel>Interests</PreviewLabel>
             <div className="flex flex-wrap gap-1">
               {s.interests.map((l, i) => (
-                <Badge key={i} tone="neutral">{l}</Badge>
+                <Badge key={i} tone="neutral">
+                  {l}
+                </Badge>
               ))}
             </div>
           </div>
