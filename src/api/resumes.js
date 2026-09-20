@@ -7,7 +7,7 @@ export const resumesApi = {
     apiClient.get(`/resumes/${id}/versions/${versionId}`).then((r) => r.data),
   upload: (file, title) => {
     const fd = new FormData();
-    fd.append("file", file);
+    fd.append("pdf", file);
     if (title) fd.append("title", title);
     return apiClient
       .post("/resumes", fd, {
