@@ -65,7 +65,8 @@ export function ResumeRow({ resume }) {
 
       <Badge tone="neutral" className="gap-1">
         <Layers size={11} />
-        {resume.latestVersionNumber || 1} version{(resume.latestVersionNumber || 1) > 1 ? "s" : ""}
+        {resume.latestVersionNumber || 1} version
+        {(resume.latestVersionNumber || 1) > 1 ? "s" : ""}
       </Badge>
 
       <button
