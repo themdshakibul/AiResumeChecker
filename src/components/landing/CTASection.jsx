@@ -2,8 +2,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { DarkPanel } from "./DarkPanel";
+import { useAuth } from "@/context/AuthContext";
 
 export function CTASection() {
+  const { user } = useAuth();
+
   return (
     <section
       className="px-3 sm:px-6 mt-28 sm:mt-36"
@@ -54,8 +57,8 @@ export function CTASection() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-white/65 text-base sm:text-lg mt-5 max-w-xl mx-auto leading-relaxed"
         >
-          Upload your resume now. Get your ATS score, fixable issues, and AI rewrites
-          in under 15 seconds.
+          Upload your resume now. Get your ATS score, fixable issues, and AI
+          rewrites in under 15 seconds.
         </motion.p>
 
         <motion.div
@@ -66,7 +69,7 @@ export function CTASection() {
           className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3"
         >
           <Link
-            to="/register"
+            to={user ? "/resumes" : "/register"}
             className="group relative inline-flex items-center gap-2 h-12 px-6 rounded-full font-semibold text-[14px] text-white shadow-[0_10px_30px_-8px_rgba(143,179,156,0.5)] hover:shadow-[0_14px_36px_-8px_rgba(143,179,156,0.7)] active:scale-[0.98] transition-all"
             style={{
               background:
@@ -81,14 +84,17 @@ export function CTASection() {
               }}
             />
             <span className="relative">Start free ATS analysis</span>
-            <ArrowRight size={15} className="relative group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight
+              size={15}
+              className="relative group-hover:translate-x-0.5 transition-transform"
+            />
           </Link>
 
           <Link
-            to="/login"
+            to={user ? "/dashboard" : "/login"}
             className="inline-flex items-center gap-2 h-12 px-5 rounded-full font-medium text-[14px] text-white bg-white/8 border border-white/12 backdrop-blur-md hover:bg-white/12 transition-colors"
           >
-            I already have an account
+            {user ? "Go to dashboard" : "I already have an account"}
           </Link>
         </motion.div>
 

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   LayoutGrid,
   FileText,
@@ -60,7 +60,7 @@ function ActionRow({ icon: Icon, label, onClick, to }) {
         ROW_BASE,
         isActive
           ? "bg-[var(--ink)] text-[var(--bg)] shadow-card"
-          : "text-[var(--ink-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]"
+          : "text-[var(--ink-muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]",
       )}
     >
       <span className="h-11 w-11 flex items-center justify-center shrink-0">
@@ -101,10 +101,12 @@ export function Sidebar() {
       )}
     >
       <div className="flex flex-col items-center gap-6 w-full">
-        <div
+        <Link
+          to="/"
+          title="Home"
           className={cn(
             "flex items-center h-14 w-14 group-hover/sidebar:w-[200px]",
-            "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           )}
         >
           <div className="h-12 w-12 flex items-center justify-center shrink-0">
@@ -120,7 +122,7 @@ export function Sidebar() {
           >
             Roaster
           </span>
-        </div>
+        </Link>
 
         <nav className="flex flex-col items-center gap-1.5">
           {NAV.map((item) => (

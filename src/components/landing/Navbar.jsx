@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import AILogo from "@/components/layout/AILogo";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/AuthContext";
 
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -60,22 +62,37 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              to="/login"
-              className="hidden sm:inline-flex h-9 px-4 rounded-full text-[13px] font-medium text-[var(--ink)] hover:bg-[var(--surface-2)] items-center transition-colors"
-            >
-              Sign in
-            </Link>
-            <Link
-              to="/register"
-              className="group inline-flex items-center gap-1.5 h-9 pl-4 pr-3.5 rounded-full bg-[var(--ink)] text-[var(--bg)] text-[13px] font-semibold hover:opacity-90 active:scale-[0.98] transition-all"
-            >
-              Get started
-              <ArrowRight
-                size={13}
-                className="group-hover:translate-x-0.5 transition-transform"
-              />
-            </Link>
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="group inline-flex items-center gap-1.5 h-9 pl-4 pr-3.5 rounded-full bg-[var(--ink)] text-[var(--bg)] text-[13px] font-semibold hover:opacity-90 active:scale-[0.98] transition-all"
+              >
+                {user.name || "Dashboard"}
+                <ArrowRight
+                  size={13}
+                  className="group-hover:translate-x-0.5 transition-transform"
+                />
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden sm:inline-flex h-9 px-4 rounded-full text-[13px] font-medium text-[var(--ink)] hover:bg-[var(--surface-2)] items-center transition-colors"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  to="/register"
+                  className="group inline-flex items-center gap-1.5 h-9 pl-4 pr-3.5 rounded-full bg-[var(--ink)] text-[var(--bg)] text-[13px] font-semibold hover:opacity-90 active:scale-[0.98] transition-all"
+                >
+                  Get started
+                  <ArrowRight
+                    size={13}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
+                </Link>
+              </>
+            )}
             <button
               onClick={() => setOpen((o) => !o)}
               className="md:hidden h-9 w-9 rounded-full flex items-center justify-center text-[var(--ink)] hover:bg-[var(--surface-2)]"
@@ -104,10 +121,10 @@ export function Navbar() {
               </a>
             ))}
             <Link
-              to="/login"
+              to={user ? "/dashboard" : "/login"}
               className="block px-3 py-2 rounded-xl text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface-2)]"
             >
-              Sign in
+              {user ? user.name || "Dashboard" : "Sign in"}
             </Link>
           </motion.div>
         )}
