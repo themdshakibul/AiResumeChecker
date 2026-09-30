@@ -10,17 +10,16 @@ import {
 const C = {
   ink: "#111418",
   inkMuted: "#5C6470",
-  accent: "#2F4A3A",
-  accentSoft: "#E6EFE8",
+  accent: "#111418",
   hairline: "#E5E5DF",
   bg: "#FFFFFF",
 };
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 56,
-    paddingBottom: 56,
-    paddingHorizontal: 56,
+    paddingTop: 48,
+    paddingBottom: 48,
+    paddingHorizontal: 52,
     fontSize: 10.25,
     color: C.ink,
     fontFamily: "Helvetica",
@@ -33,18 +32,16 @@ const styles = StyleSheet.create({
     marginBottom: 22,
   },
   name: {
-    fontSize: 26,
+    fontSize: 24,
     fontFamily: "Helvetica-Bold",
-    letterSpacing: -0.6,
     color: C.ink,
     lineHeight: 1.15,
     marginBottom: 6,
   },
   title: {
-    fontSize: 11.5,
-    fontFamily: "Helvetica",
-    color: C.accent,
-    letterSpacing: 0.4,
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: C.inkMuted,
     lineHeight: 1.3,
     marginBottom: 12,
   },
@@ -83,9 +80,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionHeaderText: {
-    fontSize: 9,
+    fontSize: 10,
     fontFamily: "Helvetica-Bold",
-    letterSpacing: 1.6,
     color: C.accent,
     textTransform: "uppercase",
   },
@@ -101,6 +97,12 @@ const styles = StyleSheet.create({
     fontSize: 10.25,
     lineHeight: 1.55,
     color: C.ink,
+  },
+  rawTextLine: {
+    fontSize: 10.25,
+    lineHeight: 1.5,
+    color: C.ink,
+    marginBottom: 3,
   },
 
   // experience
@@ -217,15 +219,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  skillChip: {
-    fontSize: 9.5,
-    backgroundColor: C.accentSoft,
-    color: C.accent,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 999,
-    marginRight: 5,
-    marginBottom: 5,
+  skillsText: {
+    fontSize: 10.25,
+    lineHeight: 1.5,
+    color: C.ink,
   },
 
   // certifications
@@ -245,24 +242,10 @@ const styles = StyleSheet.create({
     color: C.inkMuted,
   },
 
-  // two-column tail (languages + interests)
-  twoCol: {
-    flexDirection: "row",
-    gap: 24,
-  },
-  colHalf: {
-    flex: 1,
-  },
-  pillLine: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 4,
-  },
-  pill: {
-    fontSize: 9.75,
+  listText: {
+    fontSize: 10.25,
+    lineHeight: 1.5,
     color: C.ink,
-    marginRight: 10,
-    marginBottom: 3,
   },
 
   // footer
@@ -317,9 +300,21 @@ function shortenUrl(url) {
     .replace(/\/$/, "");
 }
 
+function hasParsedContent(parsedSections) {
+  return Boolean(
+    parsedSections.summary ||
+    parsedSections.experience?.length ||
+    parsedSections.education?.length ||
+    parsedSections.skills?.length ||
+    parsedSections.projects?.length ||
+    parsedSections.certifications?.length,
+  );
+}
+
 export function ResumeDocument({ user, version, title }) {
   const p = version?.parsedSections || {};
   const basics = p.basics || {};
+  const hasContent = hasParsedContent(p);
 
   const displayName = basics.name?.trim() || user?.name || "Your Name";
   const displayEmail = basics.email?.trim() || user?.email || "";
@@ -354,6 +349,20 @@ export function ResumeDocument({ user, version, title }) {
           <View style={styles.rule} />
         </View>
 
+        {!hasContent && version?.rawText?.trim() ? (
+          <View style={styles.section}>
+            <SectionHeader>Resume</SectionHeader>
+            {version.rawText
+              .trim()
+              .split(/\r?\n/)
+              .map((line, index) => (
+                <Text key={index} style={styles.rawTextLine}>
+                  {line || " "}
+                </Text>
+              ))}
+          </View>
+        ) : null}
+
         {/* Summary */}
         {p.summary ? (
           <View style={styles.section}>
@@ -367,7 +376,7 @@ export function ResumeDocument({ user, version, title }) {
           <View style={styles.section}>
             <SectionHeader>Experience</SectionHeader>
             {p.experience.map((exp, i) => (
-              <View key={i} style={styles.expItem} wrap={false}>
+              <View key={i} style={styles.expItem}>
                 <View style={styles.expHeader}>
                   <Text style={styles.expRole}>{exp.role || "Role"}</Text>
                   {exp.period ? (
@@ -396,7 +405,7 @@ export function ResumeDocument({ user, version, title }) {
           <View style={styles.section}>
             <SectionHeader>Projects</SectionHeader>
             {p.projects.map((proj, i) => (
-              <View key={i} style={styles.projItem} wrap={false}>
+              <View key={i} style={styles.projItem}>
                 <View style={styles.projHeader}>
                   <Text style={styles.projName}>{proj.name}</Text>
                   {proj.tech?.length ? (
@@ -425,7 +434,7 @@ export function ResumeDocument({ user, version, title }) {
           <View style={styles.section}>
             <SectionHeader>Education</SectionHeader>
             {p.education.map((edu, i) => (
-              <View key={i} style={styles.eduItem} wrap={false}>
+              <View key={i} style={styles.eduItem}>
                 <View style={styles.eduRow}>
                   <Text style={styles.eduDegree}>{edu.degree}</Text>
                   {edu.period ? (
@@ -450,13 +459,7 @@ export function ResumeDocument({ user, version, title }) {
         {p.skills?.length > 0 ? (
           <View style={styles.section}>
             <SectionHeader>Skills</SectionHeader>
-            <View style={styles.skillsGrid}>
-              {p.skills.map((s, i) => (
-                <Text key={i} style={styles.skillChip}>
-                  {s}
-                </Text>
-              ))}
-            </View>
+            <Text style={styles.skillsText}>{p.skills.join(", ")}</Text>
           </View>
         ) : null}
 
@@ -478,33 +481,17 @@ export function ResumeDocument({ user, version, title }) {
           </View>
         ) : null}
 
-        {/* Languages + Interests two-column */}
-        {(p.languages?.length > 0 || p.interests?.length > 0) && (
-          <View style={[styles.section, styles.twoCol]}>
-            {p.languages?.length > 0 && (
-              <View style={styles.colHalf}>
-                <SectionHeader>Languages</SectionHeader>
-                <View style={styles.pillLine}>
-                  {p.languages.map((l, i) => (
-                    <Text key={i} style={styles.pill}>
-                      {l}
-                    </Text>
-                  ))}
-                </View>
-              </View>
-            )}
-            {p.interests?.length > 0 && (
-              <View style={styles.colHalf}>
-                <SectionHeader>Interests</SectionHeader>
-                <View style={styles.pillLine}>
-                  {p.interests.map((l, i) => (
-                    <Text key={i} style={styles.pill}>
-                      {l}
-                    </Text>
-                  ))}
-                </View>
-              </View>
-            )}
+        {p.languages?.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader>Languages</SectionHeader>
+            <Text style={styles.listText}>{p.languages.join(", ")}</Text>
+          </View>
+        )}
+
+        {p.interests?.length > 0 && (
+          <View style={styles.section}>
+            <SectionHeader>Interests</SectionHeader>
+            <Text style={styles.listText}>{p.interests.join(", ")}</Text>
           </View>
         )}
 
